@@ -2,7 +2,7 @@ const path = require('path')
 const types = require('./serverless.types.js')
 const { Component, utils } = require('@serverless/core')
 
-const generateName = (name = 'mono', stage = 'dev') => {
+const generateName = (name = 'backend', stage = 'dev') => {
   const shortId = Math.random()
     .toString(36)
     .substring(6)
@@ -10,7 +10,7 @@ const generateName = (name = 'mono', stage = 'dev') => {
   return `${name}-${stage}-${shortId}`
 }
 
-class Mono extends Component {
+class Backend extends Component {
 
   types() { return types }
 
@@ -42,7 +42,7 @@ class Mono extends Component {
 
     const lambdaInputs = {
       name,
-      description: inputs.description || 'Mono Lambda Powered by Serverless Components',
+      description: inputs.description || 'A function for a Backend Component',
       memory: inputs.memory || 128,
       timeout: inputs.timeout || 10,
       runtime: 'nodejs8.10',
@@ -61,7 +61,7 @@ class Mono extends Component {
     const apigInputs = {
       name: `${name}-apig`,
       stage: inputs.stage,
-      description: 'Mono APIG',
+      description: 'An API for a Backend component',
       endpoints: [
         {
           path: '/',
@@ -111,4 +111,4 @@ class Mono extends Component {
   }
 }
 
-module.exports = Mono
+module.exports = Backend

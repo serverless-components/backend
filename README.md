@@ -1,10 +1,8 @@
-![https://www.serverless.com](https://s3.amazonaws.com/assets.github.serverless/readme-serverless-mono-2.png)
-
-# mono
+# Backend
 
 &nbsp;
 
-Easily host web frameworks and applications on a single AWS Lambda function using this [Serverless Component](https://www.github.com/serverless/components).
+Easily host entire web applications on a single AWS Lambda function using this [Serverless Component](https://www.github.com/serverless/components).
 
 ### Features
 
@@ -32,7 +30,7 @@ $ npm install -g @serverless/components
 ### 2. Create
 
 ```console
-$ mkdir mono && cd mono
+$ mkdir backend && cd backend
 ```
 
 The directory should look something like this:
@@ -57,7 +55,7 @@ The `index.js` file should look something like this.
 
 ```js
 module.exports = async (e, ctx, cb) => {
-  return { statusCode: 200, body: 'mono app deployed.' }
+  return { statusCode: 200, body: 'backend app deployed.' }
 }
 
 // you could also just return an object
@@ -84,14 +82,14 @@ All the following inputs are optional. However, they allow you to configure your
 ```yml
 # serverless.yml
 
-name: mono
+name: backend
 stage: dev
 
-mono:
-  component: "@serverless/mono"
+backend:
+  component: "@serverless/backend"
   inputs:
-    name: my-mono-app
-    description: My Mono App
+    name: my-backend
+    description: My Backend
     region: us-east-1
     memory: 128
     timeout: 10
@@ -108,15 +106,15 @@ mono:
 ### 4. Deploy
 
 ```console
-mono (master)$ components
+backend (master)$ components
 
-  Mono › outputs:
+  Backend › outputs:
   url:  'https://bbhm7tk587.execute-api.us-east-1.amazonaws.com/dev/'
 
 
-  7s › dev › Mono › done
+  7s › dev › Backend › done
 
-mono (master)$
+backend (master)$
 ```
 
 All requests to this root url will be proxied directly to your lambda function, giving you full control of the http layer.
