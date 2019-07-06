@@ -1,15 +1,15 @@
 const types = {
   functions: {
     default: {
-      description: 'Deploys an instance of the mono component',
+      description: 'Deploys an instance of this component',
       inputs: {
         name: {
-          description: 'The name of this instance of the mono component',
+          description: 'The name of this instance of this component',
           type: 'string',
           required: true,
         },
         description: {
-          description: 'The description of this instance of the mono component',
+          description: 'The description of this instance of this component',
           type: 'string',
           required: true,
         },
@@ -84,7 +84,7 @@ const types = {
       },
     },
     remove: {
-      description: 'Removes an instance of the mono component',
+      description: 'Removes this instance of this component',
       inputs: {}
     }
   }
