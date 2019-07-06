@@ -1,0 +1,24 @@
+{
+  "name": "@serverless/mono",
+  "version": "0.3.6",
+  "author": "Eslam λ Hefnawy",
+  "license": "Apache",
+  "main": "./serverless.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@serverless/aws-api-gateway": "^0.3.0",
+    "@serverless/aws-lambda": "^0.3.4",
+    "@serverless/aws-s3": "^0.3.0",
+    "@serverless/core": "^0.1.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "9.0.0",
+    "eslint": "5.6.0",
+    "eslint-config-prettier": "^3.6.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-prettier": "^3.0.1",
+    "prettier": "^1.15.3"
+  }
+}
