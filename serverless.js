@@ -2,47 +2,57 @@ const path = require('path')
 const types = require('./serverless.types.js')
 const { Component, utils } = require('@serverless/core')
 
-const generateName = (name = 'backend', stage = 'dev') => {
-  const shortId = Math.random()
-    .toString(36)
-    .substring(6)
-
-  return `${name}-${stage}-${shortId}`
-}
+/**
+ * Component: Backend
+ */
 
 class Backend extends Component {
 
+  /**
+   * Types
+   */
+
   types() { return types }
 
+  /**
+   * Default
+   */
+
   async default(inputs = {}) {
-    inputs.stage = inputs.stage || 'dev'
-    inputs.code = inputs.code ? path.resolve(inputs.code) : path.join(process.cwd(), './test')
+    inputs.code = inputs.code ? path.resolve(inputs.code) : null
+
+    if (!inputs.code) {
+      throw Error(`"code" is a required input.`)
+    }
 
     if (!(await utils.fileExists(path.join(inputs.code, 'index.js')))) {
-      throw Error(`no index.js file found in the directory "${inputs.code}"`)
+      throw Error(`No index.js file found in the directory "${inputs.code}"`)
     }
 
     this.context.status('Starting Deployment')
-    const name = this.state.name || generateName(inputs.name, inputs.stage)
 
     const bucket = await this.load('@serverless/aws-s3')
     const role = await this.load('@serverless/aws-iam-role')
     const lambda = await this.load('@serverless/aws-lambda')
     const apig = await this.load('@serverless/aws-api-gateway')
 
-    this.context.status('Deploying Bucket')
-    await bucket({ name, region: inputs.region })
+    this.context.status('Deploying AWS S3 Bucket')
+    const bucketOutputs = await bucket({
+      backend: 'backend-' + this.context.resourceId(),
+      region: inputs.region
+    })
 
-    this.context.status('Deploying Role')
+    this.context.status('Deploying AWS IAM Role')
     const roleOutputs = await role({
-      name,
+      name: 'backend-' + this.context.resourceId(),
       region: inputs.region,
       service: 'lambda.amazonaws.com'
     })
 
+    this.context.status('Deploying AWS Lambda')
     const lambdaInputs = {
-      name,
-      description: inputs.description || 'A function for a Backend Component',
+      name: 'backend-' + this.context.resourceId(),
+      description: 'A function for a Backend Component',
       memory: inputs.memory || 128,
       timeout: inputs.timeout || 10,
       runtime: 'nodejs8.10',
@@ -51,16 +61,15 @@ class Backend extends Component {
       handler: 'shim.handler',
       shims: [path.join(__dirname, 'shim.js')],
       env: inputs.env || {},
-      bucket: name,
+      bucket: bucketOutputs.name,
       region: inputs.region
     }
-
-    this.context.status('Deploying Lambda')
     const lambdaOutputs = await lambda(lambdaInputs)
 
+    this.context.status('Deploying AWS API Gateway')
     const apigInputs = {
-      name: `${name}-apig`,
-      stage: inputs.stage,
+      name: 'backend-' + this.context.resourceId(),
+      stage: 'production',
       description: 'An API for a Backend component',
       endpoints: [
         {
@@ -80,29 +89,35 @@ class Backend extends Component {
       apigInputs.region = inputs.region
     }
 
-    this.context.status('Deploying API Gateway')
     const apigOutputs = await apig(apigInputs)
 
-    this.state.name = name
+    this.state.url = apigOutputs.url
     await this.save()
 
-    this.context.log()
     this.context.output('url', apigOutputs.url)
 
     return { url: apigOutputs.url }
   }
 
+  /**
+   * Remove
+   */
+
   async remove() {
-    this.context.status('Removing')
+    this.context.status('Removing all resources')
 
     const role = await this.load('@serverless/aws-iam-role')
     const bucket = await this.load('@serverless/aws-s3')
     const lambda = await this.load('@serverless/aws-lambda')
     const apig = await this.load('@serverless/aws-api-gateway')
 
+    this.context.status('Removing AWS IAM Role')
     await role.remove()
+    this.context.status('Removing AWS S3 Bucket')
     await bucket.remove()
+    this.context.status('Removing AWS Lambda')
     await lambda.remove()
+    this.context.status('Removing AWS API Gateway')
     await apig.remove()
 
     this.state = {}
