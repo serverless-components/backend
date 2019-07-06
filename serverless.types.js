@@ -3,16 +3,6 @@ const types = {
     default: {
       description: 'Deploys an instance of this component',
       inputs: {
-        name: {
-          description: 'The name of this instance of this component',
-          type: 'string',
-          required: true,
-        },
-        description: {
-          description: 'The description of this instance of this component',
-          type: 'string',
-          required: true,
-        },
         code: {
           description: 'The directory which contains your back-end code, declared by an index.js file',
           type: 'code',
