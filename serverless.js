@@ -7,19 +7,21 @@ const { Component, utils } = require('@serverless/core')
  */
 
 class Backend extends Component {
-
   /**
    * Types
    */
 
-  types() { return types }
+  types() {
+    return types
+  }
 
   /**
    * Default
    */
 
   async default(inputs = {}) {
-    inputs.code = inputs.code ? path.resolve(inputs.code) : null
+    inputs.code = inputs.code ? path.resolve(inputs.code) : process.cwd()
+    inputs.region = inputs.region || 'us-east-1'
 
     if (!inputs.code) {
       throw Error(`"code" is a required input.`)
@@ -55,7 +57,7 @@ class Backend extends Component {
       description: 'A function for a Backend Component',
       memory: inputs.memory || 128,
       timeout: inputs.timeout || 10,
-      runtime: 'nodejs8.10',
+      runtime: 'nodejs10.x',
       code: inputs.code,
       role: roleOutputs,
       handler: 'shim.handler',
