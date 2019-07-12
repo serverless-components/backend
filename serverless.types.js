@@ -2,23 +2,25 @@ const types = {
   functions: {
     default: {
       description: 'Deploys an instance of this component',
-      inputs: {
-        code: {
-          description: 'The directory which contains your back-end code, declared by an index.js file',
+      inputs: [
+        {
+          name: 'code',
           type: 'code',
-          defaultRuntime: 'nodejs10.x',
           required: true,
+          description: 'The directory which contains your backend code, declared by an index.js file',
+          defaultRuntime: 'nodejs10.x',
           runtimes: [
             'nodejs10.x',
             'nodejs8.10',
           ]
         },
-        region: {
-          description: 'The AWS region this should be located in',
-          type: 'arrayString',
-          default: 'us-east-1',
+        {
+          name: 'region',
+          type: 'value',
           required: true,
-          array: [
+          description: 'The AWS region this should be located in',
+          default: 'us-east-1',
+          options: [
             'us-east-1',
             'us-east-2',
             'us-west-1',
@@ -42,12 +44,21 @@ const types = {
             'us-gov-west-1',
           ]
         },
-        memory: {
+        {
+          name: 'env',
+          type: 'key_value',
+          description: 'Variables you wish to be automatically bundled into your code',
+          required: false,
+          references: true,
+          multiple: true,
+        },
+        {
+          name: 'memory',
+          type: 'value',
           description: 'The memory size of the AWS Lambda function running the back-end code.  Increased memory size will result in faster performance, reduced cold-start times, but also higher cost',
-          type: 'arrayNumber',
           required: true,
           default: 896,
-          array: [
+          options: [
             128,
             384,
             512,
@@ -58,24 +69,59 @@ const types = {
             3008,
           ]
         },
-        timeout: {
+        {
+          name: 'timeout',
+          type: 'value',
           description: 'The number of seconds which the AWS Lambda function running the back-end code can run for',
-          type: 'number',
           required: true,
           default: 9,
-          max: 900,
-          min: 3,
+          options: [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            12,
+            14,
+            16,
+            20,
+            28,
+            36,
+            42,
+            50,
+            60,
+            80,
+            100,
+            120,
+            150,
+            200,
+            250,
+            300,
+            500,
+            800,
+            1000,
+            2000,
+            3000,
+            4000,
+            5000,
+            6000,
+            7000,
+            8000,
+            10000,
+            12000,
+            15000,
+          ]
         },
-        env: {
-          description: 'The environment variables to add in the AWS Lambda function running the back-end code',
-          type: 'secrets',
-          required: false,
-        },
-      },
+      ],
     },
     remove: {
       description: 'Removes this instance of this component',
-      inputs: {}
+      inputs: []
     }
   }
 }

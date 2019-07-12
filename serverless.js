@@ -19,17 +19,21 @@ class Backend extends Component {
    */
 
   async default(inputs = {}) {
-    inputs.code = inputs.code ? path.resolve(inputs.code) : null
 
-    if (!inputs.code) {
-      throw Error(`"code" is a required input.`)
+    this.context.status('Deploying')
+
+    // Default to current working directory
+    inputs.code = inputs.code || {}
+    inputs.code.src = inputs.code.src ? path.resolve(inputs.code.src) : process.cwd()
+    if (inputs.code.build) inputs.code.build = path.join(inputs.code.src, inputs.code.build)
+
+    let exists
+    if (inputs.code.build) exists = await utils.fileExists(path.join(inputs.code.build, 'index.js'))
+    else exists = await utils.fileExists(path.join(inputs.code.src, 'index.js'))
+
+    if (!exists) {
+      throw Error(`No index.js file found in the directory "${inputs.code.build || inputs.code.src}"`)
     }
-
-    if (!(await utils.fileExists(path.join(inputs.code, 'index.js')))) {
-      throw Error(`No index.js file found in the directory "${inputs.code}"`)
-    }
-
-    this.context.status('Starting Deployment')
 
     const bucket = await this.load('@serverless/aws-s3')
     const role = await this.load('@serverless/aws-iam-role')
@@ -49,14 +53,14 @@ class Backend extends Component {
       service: 'lambda.amazonaws.com'
     })
 
-    this.context.status('Deploying AWS Lambda')
+    this.context.status('Deploying AWS Lambda & Uploading Code')
     const lambdaInputs = {
       name: 'backend-' + this.context.resourceId(),
-      description: 'A function for a Backend Component',
+      description: 'A function for the Backend Component',
       memory: inputs.memory || 128,
       timeout: inputs.timeout || 10,
       runtime: 'nodejs8.10',
-      code: inputs.code,
+      code: inputs.code.build || inputs.code.src,
       role: roleOutputs,
       handler: 'shim.handler',
       shims: [path.join(__dirname, 'shim.js')],
@@ -104,7 +108,7 @@ class Backend extends Component {
    */
 
   async remove() {
-    this.context.status('Removing all resources')
+    this.context.status('Removing')
 
     const role = await this.load('@serverless/aws-iam-role')
     const bucket = await this.load('@serverless/aws-s3')
