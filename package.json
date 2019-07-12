@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@serverless/aws-api-gateway": "^0.3.0",
-    "@serverless/aws-lambda": "^0.3.4",
+    "@serverless/aws-lambda": "^0.3.0",
     "@serverless/aws-s3": "^0.3.0",
     "@serverless/core": "^0.1.24"
   },

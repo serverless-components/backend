@@ -7,12 +7,13 @@ const { Component, utils } = require('@serverless/core')
  */
 
 class Backend extends Component {
-
   /**
    * Types
    */
 
-  types() { return types }
+  types() {
+    return types
+  }
 
   /**
    * Default
@@ -66,7 +67,7 @@ class Backend extends Component {
       shims: [path.join(__dirname, 'shim.js')],
       env: inputs.env || {},
       bucket: bucketOutputs.name,
-      region: inputs.region
+      region: inputs.region || 'us-east-1',
     }
     const lambdaOutputs = await lambda(lambdaInputs)
 
