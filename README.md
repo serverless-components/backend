@@ -51,7 +51,7 @@ AWS_ACCESS_KEY_ID=XXX
 AWS_SECRET_ACCESS_KEY=XXX
 ```
 
-The `index.js` file should look something like this.
+You must include an `index.js` file that looks like this:
 
 ```js
 module.exports = async (e, ctx, cb) => {
@@ -88,19 +88,15 @@ stage: dev
 backend:
   component: "@serverless/backend"
   inputs:
-    name: my-backend
-    description: My Backend
+    code:
+      src: ./code # The root folder containing the backend code.
+      build: build # The folder within your 'src' directory containing your built artifacts
+      hook: npm run build # A hook to build/test/do anything
     region: us-east-1
     memory: 128
     timeout: 10
     env:
       TABLE_NAME: my-table
-
-    # the directory that contains the index.js file.
-    # If not provided, the default is the current working directory
-    # code: ./code
-
-
 ```
 
 ### 4. Deploy
