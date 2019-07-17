@@ -20,20 +20,28 @@ class Backend extends Component {
    */
 
   async default(inputs = {}) {
-
     this.context.status('Deploying')
+
+    inputs.region = inputs.region || 'us-east-1'
 
     // Default to current working directory
     inputs.code = inputs.code || {}
     inputs.code.src = inputs.code.src ? path.resolve(inputs.code.src) : process.cwd()
-    if (inputs.code.build) inputs.code.build = path.join(inputs.code.src, inputs.code.build)
+    if (inputs.code.build) {
+      inputs.code.build = path.join(inputs.code.src, inputs.code.build)
+    }
 
     let exists
-    if (inputs.code.build) exists = await utils.fileExists(path.join(inputs.code.build, 'index.js'))
-    else exists = await utils.fileExists(path.join(inputs.code.src, 'index.js'))
+    if (inputs.code.build) {
+      exists = await utils.fileExists(path.join(inputs.code.build, 'index.js'))
+    } else {
+      exists = await utils.fileExists(path.join(inputs.code.src, 'index.js'))
+    }
 
     if (!exists) {
-      throw Error(`No index.js file found in the directory "${inputs.code.build || inputs.code.src}"`)
+      throw Error(
+        `No index.js file found in the directory "${inputs.code.build || inputs.code.src}"`
+      )
     }
 
     const bucket = await this.load('@serverless/aws-s3')
@@ -67,7 +75,7 @@ class Backend extends Component {
       shims: [path.join(__dirname, 'shim.js')],
       env: inputs.env || {},
       bucket: bucketOutputs.name,
-      region: inputs.region || 'us-east-1',
+      region: inputs.region
     }
     const lambdaOutputs = await lambda(lambdaInputs)
 
@@ -76,6 +84,7 @@ class Backend extends Component {
       name: 'backend-' + this.context.resourceId(),
       stage: 'production',
       description: 'An API for a Backend component',
+      region: inputs.region,
       endpoints: [
         {
           path: '/',
@@ -88,10 +97,6 @@ class Backend extends Component {
           function: lambdaOutputs.arn
         }
       ]
-    }
-
-    if (inputs.region) {
-      apigInputs.region = inputs.region
     }
 
     const apigOutputs = await apig(apigInputs)
