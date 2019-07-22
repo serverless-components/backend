@@ -1,6 +1,6 @@
 {
   "name": "@serverless/backend",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "author": "Eslam λ Hefnawy",
   "license": "Apache",
   "main": "./serverless.js",

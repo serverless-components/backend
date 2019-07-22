@@ -1,4 +1,5 @@
 const path = require('path')
+const { getPolicy } = require('./utils')
 const types = require('./serverless.types.js')
 const { Component, utils } = require('@serverless/core')
 
@@ -56,11 +57,15 @@ class Backend extends Component {
     })
 
     this.context.status('Deploying AWS IAM Role')
-    const roleOutputs = await role({
+
+    const roleInputs = {
       name: 'backend-' + this.context.resourceId(),
       region: inputs.region,
-      service: 'lambda.amazonaws.com'
-    })
+      service: 'lambda.amazonaws.com',
+      policy: getPolicy(inputs.permissions)
+    }
+
+    const roleOutputs = await role(roleInputs)
 
     this.context.status('Deploying AWS Lambda & Uploading Code')
     const lambdaInputs = {
