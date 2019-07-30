@@ -27,22 +27,38 @@ class Backend extends Component {
 
     // Default to current working directory
     inputs.code = inputs.code || {}
-    inputs.code.src = inputs.code.src ? path.resolve(inputs.code.src) : process.cwd()
-    if (inputs.code.build) {
-      inputs.code.build = path.join(inputs.code.src, inputs.code.build)
+    inputs.code.root = inputs.code.root ? path.resolve(inputs.code.root) : process.cwd()
+    if (inputs.code.src) {
+      inputs.code.src = path.join(inputs.code.root, inputs.code.src)
     }
 
     let exists
-    if (inputs.code.build) {
-      exists = await utils.fileExists(path.join(inputs.code.build, 'index.js'))
-    } else {
+    if (inputs.code.src) {
       exists = await utils.fileExists(path.join(inputs.code.src, 'index.js'))
+    } else {
+      exists = await utils.fileExists(path.join(inputs.code.root, 'index.js'))
     }
 
     if (!exists) {
       throw Error(
-        `No index.js file found in the directory "${inputs.code.build || inputs.code.src}"`
+        `No index.js file found in the directory "${inputs.code.src || inputs.code.root}"`
       )
+    }
+
+    // If a hook is provided, build the assets
+    if (inputs.code.hook) {
+      this.context.status('Building assets')
+      this.context.debug(`Running ${inputs.code.hook} in ${inputs.code.root}.`)
+
+      const options = { cwd: inputs.code.root }
+      try {
+        await exec(inputs.code.hook, options)
+      } catch (err) {
+        console.error(err.stderr) // eslint-disable-line
+        throw new Error(
+          `Failed building website via "${inputs.code.hook}" due to the following error: "${err.stderr}"`
+        )
+      }
     }
 
     const bucket = await this.load('@serverless/aws-s3')
@@ -75,7 +91,7 @@ class Backend extends Component {
       memory: inputs.memory || 896,
       timeout: inputs.timeout || 10,
       runtime: 'nodejs8.10',
-      code: inputs.code.build || inputs.code.src,
+      code: inputs.code.src || inputs.code.root,
       role: roleOutputs,
       handler: 'shim.handler',
       shims: [path.join(__dirname, 'shim.js')],

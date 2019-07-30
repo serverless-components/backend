@@ -89,8 +89,8 @@ backend:
   component: "@serverless/backend"
   inputs:
     code:
-      src: ./code # The root folder containing the backend code.
-      build: build # The folder within your 'src' directory containing your built artifacts
+      root: ./code # The root folder containing the backend code.
+      src: dist # The folder within your 'src' directory containing your built artifacts
       hook: npm run build # A hook to build/test/do anything
     region: us-east-1
     memory: 128
