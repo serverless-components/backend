@@ -1,6 +1,6 @@
 {
   "name": "@serverless/backend",
-  "version": "2.0.0",
+  "version": "2.0.2",
   "author": "Eslam λ Hefnawy",
   "license": "Apache",
   "main": "./serverless.js",
@@ -11,6 +11,7 @@
     "@serverless/aws-api-gateway": "^1.0.0",
     "@serverless/aws-lambda": "^1.0.0",
     "@serverless/aws-s3": "^1.0.0",
+    "@serverless/domain": "^2.0.0",
     "@serverless/core": "^1.0.0"
   },
   "devDependencies": {

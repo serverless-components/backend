@@ -49,6 +49,7 @@ class Backend extends Component {
     const role = await this.load('@serverless/aws-iam-role')
     const lambda = await this.load('@serverless/aws-lambda')
     const apig = await this.load('@serverless/aws-api-gateway')
+    const domain = await this.load('@serverless/domain')
 
     this.context.status('Deploying AWS S3 Bucket')
     const bucketOutputs = await bucket({
@@ -106,12 +107,28 @@ class Backend extends Component {
 
     const apigOutputs = await apig(apigInputs)
 
+    const outputs = { url: apigOutputs.url }
+
+    if (inputs.domain) {
+      const subdomain = inputs.domain.split('.')[0]
+      const secondLevelDomain = inputs.domain.replace(`${subdomain}.`, '')
+
+      const domainInputs = {
+        domain: secondLevelDomain,
+        subdomains: {}
+      }
+
+      domainInputs.subdomains[subdomain] = apigOutputs
+      const domainOutputs = await domain(domainInputs)
+
+      outputs.domain = domainOutputs.domains[0]
+    }
+
     this.state.url = apigOutputs.url
+    this.state.domain = apigOutputs.domain
     await this.save()
 
-    this.context.output('url', apigOutputs.url)
-
-    return { url: apigOutputs.url }
+    return outputs
   }
 
   /**
@@ -125,6 +142,7 @@ class Backend extends Component {
     const bucket = await this.load('@serverless/aws-s3')
     const lambda = await this.load('@serverless/aws-lambda')
     const apig = await this.load('@serverless/aws-api-gateway')
+    const domain = await this.load('@serverless/domain')
 
     this.context.status('Removing AWS IAM Role')
     await role.remove()
@@ -134,6 +152,8 @@ class Backend extends Component {
     await lambda.remove()
     this.context.status('Removing AWS API Gateway')
     await apig.remove()
+    this.context.status('Removing Domain')
+    await domain.remove()
 
     this.state = {}
     await this.save()
