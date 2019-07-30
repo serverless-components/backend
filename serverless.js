@@ -72,7 +72,7 @@ class Backend extends Component {
     const lambdaInputs = {
       name: 'backend-' + this.context.resourceId(),
       description: 'A function for the Backend Component',
-      memory: inputs.memory || 128,
+      memory: inputs.memory || 896,
       timeout: inputs.timeout || 10,
       runtime: 'nodejs8.10',
       code: inputs.code.build || inputs.code.src,
