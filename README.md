@@ -24,7 +24,7 @@ Easily host entire web applications on a single AWS Lambda function using this [
 ### 1. Install
 
 ```console
-$ npm install -g @serverless/components
+$ npm install -g serverless
 ```
 
 ### 2. Create
@@ -44,9 +44,8 @@ The directory should look something like this:
 |- .env.prod      # your production AWS api keys
 ```
 
-the `.env` files are not required if you have the aws keys set globally and you want to use a single stage, but they should look like this.
-
 ```
+# .env
 AWS_ACCESS_KEY_ID=XXX
 AWS_SECRET_ACCESS_KEY=XXX
 ```
@@ -82,9 +81,6 @@ All the following inputs are optional. However, they allow you to configure your
 ```yml
 # serverless.yml
 
-name: backend
-stage: dev
-
 backend:
   component: "@serverless/backend"
   inputs:
@@ -102,15 +98,7 @@ backend:
 ### 4. Deploy
 
 ```console
-backend (master)$ components
-
-  Backend › outputs:
-  url:  'https://bbhm7tk587.execute-api.us-east-1.amazonaws.com/dev/'
-
-
-  7s › dev › Backend › done
-
-backend (master)$
+$ serverless
 ```
 
 All requests to this root url will be proxied directly to your lambda function, giving you full control of the http layer.
