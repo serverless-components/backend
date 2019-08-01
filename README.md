@@ -40,8 +40,7 @@ The directory should look something like this:
 |- serverless.yml # required
 |- index.js       # required
 |- package.json   # optional
-|- .env           # your development AWS api keys
-|- .env.prod      # your production AWS api keys
+|- .env           # your AWS api keys
 ```
 
 ```
