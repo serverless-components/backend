@@ -69,7 +69,7 @@ class Backend extends Component {
 
     this.context.status('Deploying AWS S3 Bucket')
     const bucketOutputs = await bucket({
-      backend: 'backend-' + this.context.resourceId(),
+      name: 'backend-' + this.context.resourceId(),
       region: inputs.region
     })
 
