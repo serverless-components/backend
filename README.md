@@ -10,6 +10,7 @@ Easily host entire web applications on a single AWS Lambda function using this [
 * Blazing Fast Uploads via AWS S3 Accelerated Transfer and Multi-Part.
 * Dependencies are automatically put in AWS Lambda Layers, reducing cold-start time and further reducing upload time.
 * Simple shim for receiving and responding to HTTP requests.
+* Supports specifying custom domains.
 
 &nbsp;
 
@@ -92,6 +93,11 @@ backend:
     timeout: 10
     env:
       TABLE_NAME: my-table
+    
+    # You can specify a custom domain name for your backend.
+    # You must have a public hosted zone available for this domain in AWS Route53.
+    # This is done automatically for you if you've purchased the domain via AWS Route53
+    domain: api.example.com
 ```
 
 ### 4. Deploy
