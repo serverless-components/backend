@@ -131,7 +131,8 @@ class Backend extends Component {
 
       const domainInputs = {
         domain: secondLevelDomain,
-        subdomains: {}
+        subdomains: {},
+        region: inputs.region
       }
 
       domainInputs.subdomains[subdomain] = apigOutputs
