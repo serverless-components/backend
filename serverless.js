@@ -87,7 +87,7 @@ class Backend extends Component {
     this.context.status('Deploying AWS Lambda & Uploading Code')
     const lambdaInputs = {
       name: 'backend-' + this.context.resourceId(),
-      description: 'A function for the Backend Component',
+      description: inputs.description || 'A function for the Backend Component',
       memory: inputs.memory || 896,
       timeout: inputs.timeout || 10,
       runtime: 'nodejs8.10',
