@@ -91,9 +91,10 @@ backend:
     region: us-east-1
     memory: 128
     timeout: 10
+    description: A function for the registry backend.
     env:
       TABLE_NAME: my-table
-    
+
     # You can specify a custom domain name for your backend.
     # You must have a public hosted zone available for this domain in AWS Route53.
     # This is done automatically for you if you've purchased the domain via AWS Route53.
