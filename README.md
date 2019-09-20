@@ -6,11 +6,11 @@ Easily host entire web applications on a single AWS Lambda function using this [
 
 ### Features
 
-* Designed to make it easy to host pre-existing web frameworks (e.g. Express.js, Hapi) or any large web application on a single AWS Lambda Function.
-* Blazing Fast Uploads via AWS S3 Accelerated Transfer and Multi-Part.
-* Dependencies are automatically put in AWS Lambda Layers, reducing cold-start time and further reducing upload time.
-* Simple shim for receiving and responding to HTTP requests.
-* Supports specifying custom domains.
+- Designed to make it easy to host pre-existing web frameworks (e.g. Express.js, Hapi) or any large web application on a single AWS Lambda Function.
+- Blazing Fast Uploads via AWS S3 Accelerated Transfer and Multi-Part.
+- Dependencies are automatically put in AWS Lambda Layers, reducing cold-start time and further reducing upload time.
+- Simple shim for receiving and responding to HTTP requests.
+- Supports specifying custom domains.
 
 &nbsp;
 
@@ -20,7 +20,6 @@ Easily host entire web applications on a single AWS Lambda function using this [
 4. [Deploy](#4-deploy)
 
 &nbsp;
-
 
 ### 1. Install
 
@@ -35,7 +34,6 @@ $ mkdir backend && cd backend
 ```
 
 The directory should look something like this:
-
 
 ```
 |- serverless.yml # required
@@ -82,13 +80,14 @@ All the following inputs are optional. However, they allow you to configure your
 # serverless.yml
 
 backend:
-  component: "@serverless/backend"
+  component: '@serverless/backend'
   inputs:
     code:
       root: ./code # The root folder containing the backend code.
       src: dist # The folder within your 'src' directory containing your built artifacts
       hook: npm run build # A hook to build/test/do anything
     region: us-east-1
+    runtime: nodejs10.x # The runtime for the lambda. Only nodejs10.x or nodejs8.10 are allowed
     memory: 128
     timeout: 10
     description: A function for the registry backend.

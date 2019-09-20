@@ -92,7 +92,7 @@ class Backend extends Component {
       description: inputs.description || 'A function for the Backend Component',
       memory: inputs.memory || 896,
       timeout: inputs.timeout || 10,
-      runtime: 'nodejs8.10',
+      runtime: inputs.runtime || 'nodejs10.x',
       code: inputs.code.src || inputs.code.root,
       role: roleOutputs,
       handler: 'shim.handler',
