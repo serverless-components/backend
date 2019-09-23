@@ -1,7 +1,9 @@
 const path = require('path')
+const util = require('util')
 const { getPolicy } = require('./utils')
 const types = require('./serverless.types.js')
 const { Component, utils } = require('@serverless/core')
+const exec = util.promisify(require('child_process').exec)
 
 /**
  * Component: Backend
