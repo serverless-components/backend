@@ -63,6 +63,13 @@ class Backend extends Component {
       }
     }
 
+    // Check if the runtime is allowed
+    if (inputs.runtime && !['nodejs8.10', 'nodejs10.x'].includes(inputs.runtime)) {
+      throw new Error(
+        `The runtime can only be 'nodejs8.10' or 'nodejs10.x'. Runtime specified: ${inputs.runtime}`
+      )
+    }
+
     const bucket = await this.load('@serverless/aws-s3')
     const role = await this.load('@serverless/aws-iam-role')
     const lambda = await this.load('@serverless/aws-lambda')
