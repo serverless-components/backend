@@ -91,7 +91,9 @@ backend:
     region: us-east-1
     memory: 128
     timeout: 10
-    description: A function for the registry backend.
+    description: A function for the registry backend.    
+    bucketName: myBucket # (Optional) The Bucket name where `src` files/folder will be upload.
+                         # If not provided, it will create random bucket name prefixed by `backend-`
     env:
       TABLE_NAME: my-table
 
