@@ -25,6 +25,7 @@ class Backend extends Component {
   async default(inputs = {}) {
     this.context.status('Deploying')
 
+    inputs.bucketName = inputs.bucketName || 'backend-' + this.context.resourceId()
     inputs.region = inputs.region || 'us-east-1'
 
     // Default to current working directory
@@ -71,7 +72,7 @@ class Backend extends Component {
 
     this.context.status('Deploying AWS S3 Bucket')
     const bucketOutputs = await bucket({
-      name: 'backend-' + this.context.resourceId(),
+      name: inputs.bucketName,
       region: inputs.region
     })
 
