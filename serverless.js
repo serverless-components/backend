@@ -65,9 +65,9 @@ class Backend extends Component {
     }
 
     // Check if the runtime is allowed
-    if (inputs.runtime && !['nodejs8.10', 'nodejs10.x'].includes(inputs.runtime)) {
+    if (inputs.runtime && !['nodejs8.10', 'nodejs10.x', 'nodejs12.x'].includes(inputs.runtime)) {
       throw new Error(
-        `The runtime can only be 'nodejs8.10' or 'nodejs10.x'. Runtime specified: ${inputs.runtime}`
+        `The runtime can only be 'nodejs8.10', 'nodejs10.x' or 'nodejs12.x'. Runtime specified: ${inputs.runtime}`
       )
     }
 
@@ -100,7 +100,7 @@ class Backend extends Component {
       description: inputs.description || 'A function for the Backend Component',
       memory: inputs.memory || 896,
       timeout: inputs.timeout || 10,
-      runtime: inputs.runtime || 'nodejs10.x',
+      runtime: inputs.runtime || 'nodejs12.x',
       code: inputs.code.src || inputs.code.root,
       role: roleOutputs,
       handler: 'shim.handler',
